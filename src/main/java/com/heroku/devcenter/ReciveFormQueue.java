@@ -32,7 +32,11 @@ public class ReciveFormQueue {
    	    Connection connection = factory.newConnection();
    	    Channel channel = connection.createChannel();
 
-   	    channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+   	  Map<String, Object> params = new HashMap<String, Object>();
+      params.put("x-ha-policy", "all");
+   	    
+   	    
+   	    channel.queueDeclare(QUEUE_NAME, true, false, false, params);
    	 
    	    System.out.println(" [*] Waiting for messages from Lightning Readiness");
    	    	  

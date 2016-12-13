@@ -19,14 +19,16 @@ public class ReciveFormQueue {
 
     final static Logger logger = LoggerFactory.getLogger(ReciveFormQueue.class);
 
-	 private final static String QUEUE_NAME = "mailmkt";
+	 private final static String QUEUE_NAME = "ReadinessQueue";
 
     
     
     public static void main(String[] args) throws Exception {
 
     	   ConnectionFactory factory = new ConnectionFactory();
-   	    factory.setHost(System.getenv("RABBITMQ_BIGWIG_URL"));
+   	    //factory.setHost(System.getenv("RABBITMQ_BIGWIG_URL"));
+   	    factory.setUri(System.getenv("RABBITMQ_BIGWIG_URL"));
+
    	    Connection connection = factory.newConnection();
    	    Channel channel = connection.createChannel();
 

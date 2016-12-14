@@ -7,12 +7,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 
 public class DatabaseRabbit {
 
-	static Logger logger = Logger.getLogger(DatabaseRabbit.class.getName());
+	 final static Logger logger = LoggerFactory.getLogger(DatabaseRabbit.class);
+
 	
 	private static DatabaseRabbit dbonnection;
 

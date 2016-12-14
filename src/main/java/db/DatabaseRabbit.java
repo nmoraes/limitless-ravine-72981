@@ -78,7 +78,7 @@ public class DatabaseRabbit {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
-			BigInteger dateInt = dateToNum(date);			
+			String dateInt = dateToNum(date);			
 			
 			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + dateInt+ "','" + message +"');";
 
@@ -150,14 +150,12 @@ public class DatabaseRabbit {
 		
 	}
 	
-	private static BigInteger dateToNum(String date){
+	private static String dateToNum(String date){
 
 		String aux = date.replaceAll(" ", "");
 		aux = aux.replaceAll(":", "");
-		
-		BigInteger bg = new BigInteger(aux);
-						
-	return bg;
+					
+	return aux;
 	
 	}
 	

@@ -39,7 +39,7 @@ public class MyConsumer extends DefaultConsumer {
       DatabaseRabbit db = DatabaseRabbit.getInstance();
       try {
 		db.insert(message);
-	} catch (SQLException e1) {
+	} catch (Exception e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}

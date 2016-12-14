@@ -43,11 +43,18 @@ public class DatabaseRabbit {
 			
 			String username = dbUri.getUserInfo().split(":")[0];
 			String password = dbUri.getUserInfo().split(":")[1];
+			
+			
+			System.out.println("CONECTIONS PROPERTIES:");
+			System.out.println("username:" + username + " password: " + password +" dbUri.getHost(): " + dbUri.getHost() +" dbUri.getPort(): " + dbUri.getPort() +" dbUri.getPath(): " + dbUri.getPath() );
+
+			
+			
+			
 			String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath()
 					+ "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
 			Class.forName("org.postgresql.Driver");
-			
 			con = DriverManager.getConnection(dbUrl, username, password);
 
 		} catch (URISyntaxException e) {

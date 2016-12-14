@@ -57,7 +57,7 @@ public class DatabaseRabbit {
 
 	
 	public void insert(String message) throws SQLException {
-
+ 
 		Connection c = null;
 		PreparedStatement ps = null;
 

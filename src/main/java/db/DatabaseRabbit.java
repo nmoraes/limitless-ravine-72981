@@ -43,7 +43,7 @@ public class DatabaseRabbit {
 					+ "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
 			Class.forName("org.postgresql.Driver");
-
+			
 			con = DriverManager.getConnection(dbUrl, username, password);
 
 		} catch (URISyntaxException e) {

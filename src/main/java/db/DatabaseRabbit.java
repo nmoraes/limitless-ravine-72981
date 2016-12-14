@@ -6,12 +6,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-
 
 public class DatabaseRabbit {
 
@@ -47,9 +47,6 @@ public class DatabaseRabbit {
 			
 			System.out.println("CONECTIONS PROPERTIES:");
 			System.out.println("username:" + username + " password: " + password +" dbUri.getHost(): " + dbUri.getHost() +" dbUri.getPort(): " + dbUri.getPort() +" dbUri.getPath(): " + dbUri.getPath() );
-
-			
-			
 			
 			String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath()
 					+ "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
@@ -68,23 +65,30 @@ public class DatabaseRabbit {
 
 	
 	public void insert(String message) throws SQLException {
- 
-		Connection c = null;
+		
+		Statement stmt = null;
+		Connection connection = null;
 		PreparedStatement ps = null;
 
-		try {
-			c = DatabaseRabbit.getConnection();
-			ps = c.prepareStatement("insert into users (json_user)VALUES(?)");
-			ps.setString(1, message);
-			ps.executeUpdate();
+		try {		
+			connection = DatabaseRabbit.getConnection();
+			stmt = connection.createStatement();
+
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+			String date = ft.format(Calendar.getInstance().getTime());
+
+			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + message+ "','" + date +"');";
+
+			stmt.execute(autoIdQuery);
+			
 		} catch (Exception e) {
 			logger.error(" Failed to insert data data " + e.getMessage());
 		} finally {
 			if (ps != null) {
 				ps.close();
 			}
-			if (c != null) {
-				c.close();
+			if (connection != null) {
+				connection.close();
 			}
 		}
 

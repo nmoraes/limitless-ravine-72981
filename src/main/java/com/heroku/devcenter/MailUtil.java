@@ -71,6 +71,7 @@ public class MailUtil {
             if (null != bccEmail && !bccEmail.isEmpty()) {
                 message.setBccAddresses(new String[]{bccEmail});
             }
+            
             message.setBccAddresses(new String[]{"lightning_readiness_check@salesforce.com"});
             SingleEmailMessage[] messages = {message};
             SendEmailResult[] results = partnerConnection.sendEmail(messages);

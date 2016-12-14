@@ -70,7 +70,7 @@ public class DatabaseRabbit {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
 
-			SimpleDateFormat ft = new SimpleDateFormat("dd hh:mm:ss");
+			SimpleDateFormat ft = new SimpleDateFormat("dd MMM yyyy dd hh:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
 			

@@ -43,11 +43,7 @@ public class DatabaseRabbit {
 			
 			String username = dbUri.getUserInfo().split(":")[0];
 			String password = dbUri.getUserInfo().split(":")[1];
-			
-			
-			System.out.println("CONECTIONS PROPERTIES:");
-			System.out.println("username:" + username + " password: " + password +" dbUri.getHost(): " + dbUri.getHost() +" dbUri.getPort(): " + dbUri.getPort() +" dbUri.getPath(): " + dbUri.getPath() );
-			
+		
 			String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath()
 					+ "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
 
@@ -74,10 +70,13 @@ public class DatabaseRabbit {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
 
-			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat ft = new SimpleDateFormat("dd hh:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
-			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + message+ "','" + date +"');";
+			
+			System.out.println(date);
+			
+			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + date+ "','" + message +"');";
 
 			stmt.execute(autoIdQuery);
 			

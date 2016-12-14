@@ -1,5 +1,6 @@
 package db;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -77,10 +78,7 @@ public class DatabaseRabbit {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
-			
-			System.out.println("DATE ANTES:" + date);
-			int dateInt = dateToNum(date);
-			System.out.println("DATE DESPUES:" + dateInt);
+			BigInteger dateInt = dateToNum(date);			
 			
 			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + dateInt+ "','" + message +"');";
 
@@ -152,20 +150,16 @@ public class DatabaseRabbit {
 		
 	}
 	
-	
-	private int dateToNum(String date){
+	private static BigInteger dateToNum(String date){
 
 		String aux = date.replaceAll(" ", "");
-		aux = aux.replaceAll(":", " ");
-			
-		int foo = Integer.parseInt(aux.trim());
-				
-	return foo;
+		aux = aux.replaceAll(":", "");
+		
+		BigInteger bg = new BigInteger(aux);
+						
+	return bg;
 	
 	}
-	
-	
-	
 	
 	
 	public void deleteOldReports() throws SQLException {

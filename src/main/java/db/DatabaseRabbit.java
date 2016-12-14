@@ -5,11 +5,15 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,9 +78,11 @@ public class DatabaseRabbit {
 			String date = ft.format(Calendar.getInstance().getTime());
 
 			
-			System.out.println(date);
+			System.out.println("DATE ANTES:" + date);
+			int dateInt = dateToNum(date);
+			System.out.println("DATE DESPUES:" + dateInt);
 			
-			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + date+ "','" + message +"');";
+			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + dateInt+ "','" + message +"');";
 
 			stmt.execute(autoIdQuery);
 			
@@ -93,9 +99,74 @@ public class DatabaseRabbit {
 
 	}
 	
-	public void select(){}
+	public void select(){
+		
+//		Statement stmt = null;
+//		Connection connection = null;
+//		ResultSet rs = null;
+//		try {
+//			connection = DatabaseRabbit.getConnection();
+//			stmt = connection.createStatement();
+//
+//			// get the reports Id in the DB
+//			String autoIdQuery = "SELECT * FROM users;";
+//
+//			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
+//			String date = ft.format(Calendar.getInstance().getTime());
+//			
+//			
+//			rs = stmt.executeQuery(autoIdQuery);
+//
+//			 while (rs.next()) {
+//					if (rs.getString("parameter").equals("CURRENT_VERSION")) {
+//					    CURRENT_VERSION = rs.getString("value");
+//					}
+//					if (rs.getString("parameter").equals("CLIENT_ID")) {
+//					    byte[] decoded = Base64.decodeBase64(rs.getBytes("value"));
+//					    CLIENT_ID = new String(decoded);
+//
+//					}
+//					if (rs.getString("parameter").equals("CLIENT_SECRET")) {
+//					    byte[] decoded = Base64.decodeBase64(rs.getBytes("value"));
+//					    CLIENT_SECRET = new String(decoded);
+//
+//
+//		
+//		
+		
+		
+		
+		
+	}
 	
-	public void delete(){}
+					
+					
+					
+					
+					
+	public void delete(){
+				
+	
+		
+		
+		
+	}
+	
+	
+	private int dateToNum(String date){
+
+		String aux = date.replaceAll(" ", "");
+		aux = aux.replaceAll(":", " ");
+			
+		int foo = Integer.parseInt(aux.trim());
+				
+	return foo;
+	
+	}
+	
+	
+	
+	
 	
 	public void deleteOldReports() throws SQLException {
 //		Statement stmt = null;

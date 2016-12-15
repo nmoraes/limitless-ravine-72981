@@ -1,5 +1,6 @@
 package db;
 
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,8 +16,14 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.heroku.devcenter.DataModel;
+import com.heroku.devcenter.MailUtil;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.ws.ConnectionException;
 
 public class DatabaseRabbit {
 
@@ -130,9 +137,10 @@ public class DatabaseRabbit {
 						long total_long = total.longValue();
 						
 						//Send message if condition true
-					    if(total_long >= 5){
+					    if(total_long >= 500){
 					    	//1.send
 					    	System.out.println("* Sending email to ID = " + rs.getString("id"));
+					    	//send(rs.getString("json_user"));
 					    	
 					    	//2.add to list to delete later
 					    	idsToDelete.add(rs.getString("id"));
@@ -179,97 +187,43 @@ public class DatabaseRabbit {
 	}
 	
 	
-	public void deleteOldReports() throws SQLException {
-//		Statement stmt = null;
-//		Connection connection = null;
-//		ResultSet rs = null;
-//		try {
-//			connection = DatabaseRabbit.getConnection();
-//			stmt = connection.createStatement();
-//
-//			SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-//			Calendar cal = Calendar.getInstance();
-//			cal.add(Calendar.DAY_OF_YEAR, -90);
-//			String dt = ft.format(cal.getTime());
-//
-//			// get the reports Id in the DB
-//			String autoIdQuery = "SELECT id FROM report WHERE date<'" + dt.toString() + "';";
-//
-//			rs = stmt.executeQuery(autoIdQuery);
-//
-//			List<String> reportIdList = new ArrayList<String>();
-//			while (rs.next()) {
-//				reportIdList.add(rs.getString("id"));
-//			}
-//
-//			for (String reportId : reportIdList) {
-//
-//				logger.info(reportId);
-//
-//				autoIdQuery = "";
-//
-//				// TabsAndObjects
-//				autoIdQuery += "DELETE FROM tabsandobjects WHERE reportid=" + reportId + ";";
-//
-//				// CustomButtonsJS
-//				autoIdQuery += "DELETE FROM custombuttonsjs WHERE reportid=" + reportId + ";";
-//
-//				// CustomButtonsLinks
-//				autoIdQuery += "DELETE FROM custombuttonslinks WHERE reportid=" + reportId + ";";
-//
-//				// RelatedLists
-//				autoIdQuery += "DELETE FROM relatedlists WHERE reportid=" + reportId + ";";
-//
-//				// SharingButtons
-//				autoIdQuery += "DELETE FROM sharingbuttons WHERE reportid=" + reportId + ";";
-//
-//				// Cases
-//				autoIdQuery += "DELETE FROM cases WHERE reportid=" + reportId + ";";
-//
-//				// CTI
-//				autoIdQuery += "DELETE FROM cti WHERE reportid=" + reportId + ";";
-//
-//				// MyDomain
-//				autoIdQuery += "DELETE FROM mydomain WHERE reportid=" + reportId + ";";
-//				
-//				// Data.Com
-//				autoIdQuery += "DELETE FROM datacom WHERE reportid=" + reportId + ";";
-//
-//				// delete sub tables
-//				stmt.execute(autoIdQuery);
-//
-//				// delete main tables
-//				autoIdQuery = "DELETE FROM report WHERE id=" + reportId + ";";
-//				stmt.execute(autoIdQuery);
-//
-//			}
-//
-//			// update purge date
-//			autoIdQuery = "UPDATE transactions_info SET value='"
-//					+ ft.format(Calendar.getInstance().getTime()).toString() + "' WHERE name='date_purge';";
-//
-//			stmt.execute(autoIdQuery);
-//
-//		} catch (Exception e) {
-//			logger.error(" Failed to delete old reports : " + e.getMessage());
-//		} finally {
-//			if (rs != null) {
-//				rs.close();
-//			}
-//			if (stmt != null) {
-//				stmt.close();
-//			}
-//			if (connection != null) {
-//				connection.close();
-//			}
-//		}
+	
+	private void send (String message){
+			     
+      JSONObject jsonObj = new JSONObject(message);      
+      String token = (String) jsonObj.get("token");
+      String instance_url = (String) jsonObj.get("instance_url");
+      String current_version = (String) jsonObj.get("current_version");
+      
+      //String email_id = (String) jsonObj.get("email_id");
+      String org_id = (String) jsonObj.get("org_id");
+      String user_id = (String) jsonObj.get("user_id");
+      
+      String created_date = (String) jsonObj.get("created_date");
+     // String content_version_uploader = (String) jsonObj.get("content_version_uploader");
+     // String reportIdDb = (String) jsonObj.get("reportIdDb");
+     
+      PartnerConnection partnerConection = null;    
+      
+      try {
+		 partnerConection = DataModel.createPartnerConection(token, instance_url, current_version);
+	} catch (ConnectionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+      
+	  MailUtil mailUtil = new MailUtil();
+	  
+	  try {
+		mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness", "BIEN HECHO RABBIT", "rabbitmq", "", null, null, org_id, user_id, null, created_date);
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 
+		
+		
 	}
 	
 	
-	
-
-	
-	
-
 }

@@ -159,7 +159,11 @@ public class DatabaseRabbit {
 					
 	public synchronized void delete(List<String> idsToDelete){
 				
-	
+	for (int k =0; k<idsToDelete.size(); k++){
+		
+		System.out.println("Deleting IDS: "+idsToDelete.get(k));
+		
+	}
 		
 		
 		

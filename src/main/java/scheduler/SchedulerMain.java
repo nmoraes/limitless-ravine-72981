@@ -5,6 +5,8 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import db.DatabaseRabbit;
+
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -31,7 +33,16 @@ public class SchedulerMain {
 
 	        @Override
 	        public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-	            logger.info("HelloJob executed");
+	            logger.info("* Executing Rabbit Job");       
+	            DatabaseRabbit db = DatabaseRabbit.getInstance();
+	            try {
+	            	db.select();
+	      	} catch (Exception e1) {
+	      		// TODO Auto-generated catch block
+	      		 logger.info("* Rabbit Job failed" + e1.getMessage());;
+	      	}
+	            
+	            
 	        }
 	    }
 	}

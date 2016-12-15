@@ -65,7 +65,7 @@ public class DatabaseRabbit {
 
 
 	
-	public void insert(String message) throws SQLException {
+	public synchronized void insert(String message) throws SQLException {
 		
 		Statement stmt = null;
 		Connection connection = null;
@@ -97,44 +97,59 @@ public class DatabaseRabbit {
 
 	}
 	
-	public void select(){
+	public synchronized void select(){
 		
-//		Statement stmt = null;
-//		Connection connection = null;
-//		ResultSet rs = null;
-//		try {
-//			connection = DatabaseRabbit.getConnection();
-//			stmt = connection.createStatement();
-//
-//			// get the reports Id in the DB
-//			String autoIdQuery = "SELECT * FROM users;";
-//
-//			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
-//			String date = ft.format(Calendar.getInstance().getTime());
-//			
-//			
-//			rs = stmt.executeQuery(autoIdQuery);
-//
-//			 while (rs.next()) {
-//					if (rs.getString("parameter").equals("CURRENT_VERSION")) {
-//					    CURRENT_VERSION = rs.getString("value");
-//					}
-//					if (rs.getString("parameter").equals("CLIENT_ID")) {
-//					    byte[] decoded = Base64.decodeBase64(rs.getBytes("value"));
-//					    CLIENT_ID = new String(decoded);
-//
-//					}
-//					if (rs.getString("parameter").equals("CLIENT_SECRET")) {
-//					    byte[] decoded = Base64.decodeBase64(rs.getBytes("value"));
-//					    CLIENT_SECRET = new String(decoded);
-//
-//
-//		
-//		
+		Statement stmt = null;
+		Connection connection = null;
+		ResultSet rs = null;
 		
-		
-		
-		
+		List<String> idsToDelete = new ArrayList<String>(); 
+		try {
+			connection = DatabaseRabbit.getConnection();
+			stmt = connection.createStatement();
+
+			String autoIdQuery = "SELECT * FROM users;";
+
+			//system time
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
+			String date = ft.format(Calendar.getInstance().getTime());
+			String sysDate = dateToNum(date);								
+			BigInteger sysDateInt = new BigInteger(sysDate);
+					
+			rs = stmt.executeQuery(autoIdQuery);
+
+			 while (rs.next()) {
+					    String dateDB = rs.getString("date");
+					    String sysDateDB = dateToNum(dateDB);
+					    
+					    //database time
+					    BigInteger sysDateIntDB = new BigInteger(sysDateDB);
+					
+					    //system time - database time 
+						BigInteger total =sysDateInt.subtract(sysDateIntDB);
+						long total_long = total.longValue();
+						
+						//Send message if condition true
+					    if(total_long >= 5){
+					    	//1.send
+					    	System.out.println("* Sending email to ID = " + rs.getString("id"));
+					    	
+					    	//2.add to list to delete later
+					    	idsToDelete.add(rs.getString("id"));
+					    	
+					    }
+					    			    
+					  }	  	  
+					
+		   
+
+		}catch(Exception e){
+			System.out.println("ERROR SELECT METHOD EMAIL");
+			
+		}
+			
+		//Delete all record which email was sent
+		delete(idsToDelete);			
 	}
 	
 					
@@ -142,7 +157,7 @@ public class DatabaseRabbit {
 					
 					
 					
-	public void delete(){
+	public synchronized void delete(List<String> idsToDelete){
 				
 	
 		

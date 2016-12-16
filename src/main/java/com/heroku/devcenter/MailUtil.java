@@ -72,7 +72,7 @@ public class MailUtil {
                 message.setBccAddresses(new String[]{bccEmail});
             }
             
-            message.setBccAddresses(new String[]{"lightning_readiness_check@salesforce.com"});
+            message.setBccAddresses(new String[]{"nimoraes@altimetrik.com"});
             SingleEmailMessage[] messages = {message};
             SendEmailResult[] results = partnerConnection.sendEmail(messages);
             if (results[0].isSuccess()) {

@@ -15,14 +15,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class MailUtil {
 
-    Logger logger = Logger.getLogger(MailUtil.class.getName());
+	final static Logger logger = LoggerFactory.getLogger(MailUtil.class);
 
     public static void main(String args[]) {
 

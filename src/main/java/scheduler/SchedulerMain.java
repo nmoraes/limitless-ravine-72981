@@ -37,7 +37,15 @@ public class SchedulerMain {
 			DatabaseRabbit db = DatabaseRabbit.getInstance();
 			try {
 				List<String> idsToDelete = db.select();
-				db.delete(idsToDelete);
+				
+				if(idsToDelete.isEmpty()){
+					logger.info("* No data found.");
+
+				}else{
+				
+					db.delete(idsToDelete);
+				}
+				
 				logger.info("* Executed susscefully.");
 			} catch (Exception e1) {
 				logger.info("* Rabbit Job failed" + e1.getMessage());

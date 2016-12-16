@@ -181,7 +181,7 @@ public class DatabaseRabbit {
 		try {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

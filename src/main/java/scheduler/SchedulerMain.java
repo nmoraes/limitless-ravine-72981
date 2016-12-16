@@ -4,9 +4,7 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import db.DatabaseRabbit;
-
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -31,21 +29,20 @@ public class SchedulerMain {
 	        scheduler.scheduleJob(jobDetail, trigger);
 	    }
 
-	    public static class HelloJob implements Job {
+	public static class HelloJob implements Job {
 
-	        @Override
-	        public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-	            logger.info("* Executing Rabbit Job");       
-	            DatabaseRabbit db = DatabaseRabbit.getInstance();
-	            try {
-	            	List<String> idsToDelete = db.select();
-	            	db.delete(idsToDelete);
-	      	} catch (Exception e1) {
-	      		// TODO Auto-generated catch block
-	      		 logger.info("* Rabbit Job failed" + e1.getMessage());;
-	      	}
-	            
-	            
-	        }
-	    }
+		@Override
+		public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+			logger.info("* Executing Rabbit Job.");
+			DatabaseRabbit db = DatabaseRabbit.getInstance();
+			try {
+				List<String> idsToDelete = db.select();
+				db.delete(idsToDelete);
+				logger.info("* Executed susscefully.");
+			} catch (Exception e1) {
+				logger.info("* Rabbit Job failed" + e1.getMessage());
+			}
+
+		}
+	}
 	}

@@ -7,12 +7,8 @@ import com.sforce.ws.ConnectorConfig;
 
 public class DataModel {
 
-	
-	
+		
 	public static PartnerConnection createPartnerConection(String accessToken, String instanceURL, String CURRENT_VERSION) throws ConnectionException {
-
-	   System.out.println("creating PartnerConection'");
-
 		
 		ApiSession session = new ApiSession();
 		session.setAccessToken(accessToken);
@@ -25,7 +21,6 @@ public class DataModel {
 		enterpriseConfig.setAuthEndpoint(session.getApiEndpoint() + "/services/Soap/u/" + CURRENT_VERSION);
 
 		PartnerConnection partnerConnection = com.sforce.soap.partner.Connector.newConnection(enterpriseConfig);
-
 		
 		return partnerConnection;
 		

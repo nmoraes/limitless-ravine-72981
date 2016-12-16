@@ -139,7 +139,7 @@ public class DatabaseRabbit {
 						//Send message if condition true
 					    if(total_long >= 500){
 					    	//1.send
-					    	System.out.println("* Sending email to ID = " + rs.getString("id"));
+							logger.info("* Sending email to ID = " + rs.getString("id"));
 					    	send(rs.getString("json_user"));
 					    	
 					    	//2.add to list to delete later
@@ -149,11 +149,12 @@ public class DatabaseRabbit {
 					    			    
 					  }	  	  
 					
-		   
-
-		}catch(Exception e){
-			System.out.println("ERROR SELECT METHOD EMAIL");
+		}catch(SQLException e){
+			logger.error("* Failed to select registers, SQLException raised " + e.getMessage());
 			
+		}catch (ClassNotFoundException e) {
+			logger.error("* Failed to select registers, ClassNotFoundException raised " + e.getMessage());
+
 		}finally {
 			if (stmt != null) {
 				stmt.close();
@@ -162,18 +163,12 @@ public class DatabaseRabbit {
 				connection.close();
 			}
 		}
-			
-		//Delete all record which email was sent
-		//delete(idsToDelete);		
+	
 		return idsToDelete;
 	}
 	
 					
-					
-					
-					
-					
-	public synchronized void delete(List<String> idsToDelete) {
+	public synchronized void delete (List<String> idsToDelete) throws SQLException {
 
 		String autoIdQuery = "";
 		Statement stmt = null;
@@ -181,74 +176,70 @@ public class DatabaseRabbit {
 		try {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		for (int k = 0; k < idsToDelete.size(); k++) {
+			for (int k = 0; k < idsToDelete.size(); k++) {
+				logger.info("Deleting IDs: " + idsToDelete.get(k));
+				autoIdQuery = autoIdQuery + "DELETE FROM users WHERE id=" + idsToDelete.get(k) + ";";
+			}
 
-			System.out.println("Deleting IDS: " + idsToDelete.get(k));
-			autoIdQuery = autoIdQuery + "DELETE FROM users WHERE id=" + idsToDelete.get(k) + ";";
-		}
-		try {
 			stmt.execute(autoIdQuery);
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Failed to delete register, SQLException raised " + e.getMessage());
+		} catch (ClassNotFoundException e) {
+			logger.error("Failed to delete register, ClassNotFoundException raised " + e.getMessage());
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+			if (connection != null) {
+				connection.close();
+			}
 		}
-	
-	
 
 	}
 	
 
-	
-	private static String dateToNum(String date){
+	private static String dateToNum(String date) {
 
 		String aux = date.replaceAll(" ", "");
 		aux = aux.replaceAll(":", "");
-					
-	return aux;
-	
+
+		return aux;
+
 	}
-	
 	
 	
 	private void send (String message){
-			     
+		
+	  PartnerConnection partnerConection = null;    
+		
       JSONObject jsonObj = new JSONObject(message);      
       String token = (String) jsonObj.get("token");
       String instance_url = (String) jsonObj.get("instance_url");
-      String current_version = (String) jsonObj.get("current_version");
+      String current_version = (String) jsonObj.get("current_version");      
+      String org_id = (String) jsonObj.get("org_id");
+      String user_id = (String) jsonObj.get("user_id");     
+      String created_date = (String) jsonObj.get("created_date");
       
       //String email_id = (String) jsonObj.get("email_id");
-      String org_id = (String) jsonObj.get("org_id");
-      String user_id = (String) jsonObj.get("user_id");
-      
-      String created_date = (String) jsonObj.get("created_date");
      // String content_version_uploader = (String) jsonObj.get("content_version_uploader");
      // String reportIdDb = (String) jsonObj.get("reportIdDb");
-     
-      PartnerConnection partnerConection = null;    
-      
+         
       try {
 		 partnerConection = DataModel.createPartnerConection(token, instance_url, current_version);
-	} catch (ConnectionException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		 MailUtil mailUtil = new MailUtil();
+		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness", "BIEN HECHO RABBIT", "rabbitmq", "", null, null, org_id, user_id, null, created_date);
+      
+      } catch (ConnectionException e) {
+		logger.error("* Could not create partner conection: "+ e.getMessage());
+
+	} catch (FileNotFoundException e) {
+		logger.error("* SendMailApi(...) raised a FileNotFoundException: "+ e.getMessage());
+
 	}
       
-	  MailUtil mailUtil = new MailUtil();
-	  
-	  try {
-		mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness", "BIEN HECHO RABBIT", "rabbitmq", "", null, null, org_id, user_id, null, created_date);
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-
-		
+	
 		
 	}
 	

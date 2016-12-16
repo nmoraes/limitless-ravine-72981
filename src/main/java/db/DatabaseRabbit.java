@@ -104,7 +104,7 @@ public class DatabaseRabbit {
 
 	}
 	
-	public synchronized void select(){
+	public synchronized List<String> select() throws SQLException{
 		
 		Statement stmt = null;
 		Connection connection = null;
@@ -140,7 +140,7 @@ public class DatabaseRabbit {
 					    if(total_long >= 500){
 					    	//1.send
 					    	System.out.println("* Sending email to ID = " + rs.getString("id"));
-					    	//send(rs.getString("json_user"));
+					    	send(rs.getString("json_user"));
 					    	
 					    	//2.add to list to delete later
 					    	idsToDelete.add(rs.getString("id"));
@@ -154,10 +154,18 @@ public class DatabaseRabbit {
 		}catch(Exception e){
 			System.out.println("ERROR SELECT METHOD EMAIL");
 			
+		}finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+			if (connection != null) {
+				connection.close();
+			}
 		}
 			
 		//Delete all record which email was sent
-		delete(idsToDelete);			
+		//delete(idsToDelete);		
+		return idsToDelete;
 	}
 	
 					
@@ -165,17 +173,36 @@ public class DatabaseRabbit {
 					
 					
 					
-	public synchronized void delete(List<String> idsToDelete){
-				
-	for (int k =0; k<idsToDelete.size(); k++){
-		
-		System.out.println("Deleting IDS: "+idsToDelete.get(k));
-		
+	public synchronized void delete(List<String> idsToDelete) {
+
+		String autoIdQuery = "";
+		Statement stmt = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseRabbit.getConnection();
+			stmt = connection.createStatement();
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (int k = 0; k < idsToDelete.size(); k++) {
+
+			System.out.println("Deleting IDS: " + idsToDelete.get(k));
+			autoIdQuery = autoIdQuery + "DELETE FROM users WHERE id=" + idsToDelete.get(k) + ";";
+		}
+		try {
+			stmt.execute(autoIdQuery);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	
+
 	}
-		
-		
-		
-	}
+	
+
 	
 	private static String dateToNum(String date){
 

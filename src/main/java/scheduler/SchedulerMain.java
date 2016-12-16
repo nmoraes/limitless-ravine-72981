@@ -10,6 +10,8 @@ import db.DatabaseRabbit;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import static org.quartz.TriggerBuilder.newTrigger;
+
+import java.util.List;
 public class SchedulerMain {
 
 	 final static Logger logger = LoggerFactory.getLogger(SchedulerMain.class);
@@ -36,7 +38,8 @@ public class SchedulerMain {
 	            logger.info("* Executing Rabbit Job");       
 	            DatabaseRabbit db = DatabaseRabbit.getInstance();
 	            try {
-	            	db.select();
+	            	List<String> idsToDelete = db.select();
+	            	db.delete(idsToDelete);
 	      	} catch (Exception e1) {
 	      		// TODO Auto-generated catch block
 	      		 logger.info("* Rabbit Job failed" + e1.getMessage());;

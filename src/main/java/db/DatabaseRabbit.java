@@ -222,14 +222,14 @@ public class DatabaseRabbit {
       String user_id = (String) jsonObj.get("user_id");     
       String created_date = (String) jsonObj.get("created_date");
       
-      //String email_id = (String) jsonObj.get("email_id");
+      String email_id = (String) jsonObj.get("email_id");
      // String content_version_uploader = (String) jsonObj.get("content_version_uploader");
      // String reportIdDb = (String) jsonObj.get("reportIdDb");
          
       try {
 		 partnerConection = DataModel.createPartnerConection(token, instance_url, current_version);
 		 MailUtil mailUtil = new MailUtil();
-		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness", "BIEN HECHO RABBIT", "rabbitmq", "", null, null, org_id, user_id, null, created_date);
+		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness", "BIEN HECHO RABBIT", "rabbitmq", "", email_id, null, org_id, user_id, null, created_date);
       
       } catch (ConnectionException e) {
 		logger.error("* Could not create partner conection: "+ e.getMessage());

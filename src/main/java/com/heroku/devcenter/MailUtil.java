@@ -16,6 +16,8 @@ import com.sforce.soap.partner.SendEmailResult;
 import com.sforce.soap.partner.SingleEmailMessage;
 import com.sforce.ws.ConnectionException;
 
+import db.Util;
+
 
 
 public class MailUtil {
@@ -26,7 +28,7 @@ public class MailUtil {
 
     }
 
-    public void sendMailAPI(PartnerConnection partnerConnection, String subject, String body, String plainBody, String sender, String recipients, File filename, String ORG_ID, String USER_ID, String report_path, String created_date) throws FileNotFoundException{
+    public void sendMailAPI(PartnerConnection partnerConnection, String subject, String plainBody, String sender, String recipients, File filename, String ORG_ID, String USER_ID, String report_path, String created_date) throws FileNotFoundException{
 
         try {
         	
@@ -38,7 +40,7 @@ public class MailUtil {
             message.setSubject(subject);
             //message.setTargetObjectId(guir.getUserId());
             message.setUseSignature(false);
-            message.setHtmlBody(body);
+            message.setHtmlBody(Util.BODY);
             message.setPlainTextBody(plainBody);
             message.setToAddresses(new String[]{recipients});
             

@@ -4,19 +4,17 @@
  */
 package com.heroku.devcenter;
 
-import com.sforce.soap.partner.EmailFileAttachment;
-import com.sforce.soap.partner.EmailPriority;
-import com.sforce.soap.partner.SendEmailResult;
-import com.sforce.soap.partner.SingleEmailMessage;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.ws.ConnectionException;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sforce.soap.partner.EmailPriority;
+import com.sforce.soap.partner.PartnerConnection;
+import com.sforce.soap.partner.SendEmailResult;
+import com.sforce.soap.partner.SingleEmailMessage;
+import com.sforce.ws.ConnectionException;
 
 
 
@@ -33,26 +31,7 @@ public class MailUtil {
         try {
         	
             SingleEmailMessage message = new SingleEmailMessage();
-//            if (null != filename && filename.length() != 0) {
-//
-//                EmailFileAttachment efa = new EmailFileAttachment();
-//                FileInputStream fis = new FileInputStream(filename.getAbsolutePath().toString());
-//                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                byte[] buf = new byte[1024];
-//                try {
-//                    for (int readNum; (readNum = fis.read(buf)) != -1;) {
-//                        bos.write(buf, 0, readNum);
-//                    }
-//                } catch (IOException ex) {
-//                    logger.error(" Failed to attach the report" + ex.getMessage());
-//                }
-//                byte[] fileBody = bos.toByteArray();
-//                efa.setBody(fileBody);
-//                efa.setContentType("application/pdf");
-//                efa.setFileName("LightningExperienceReadinessReport.pdf");
-//                EmailFileAttachment[] efas = {efa};
-//                message.setFileAttachments(efas);
-//            }
+
             message.setBccSender(true);
             message.setEmailPriority(EmailPriority.High);
             message.setSaveAsActivity(false);
@@ -93,35 +72,9 @@ public class MailUtil {
                 
             }
 
-//            if (null != filename && filename.length() != 0) {
-//                try {
-//                    deleteDir(filename);
-//                    File zipFile = new File(report_path + "retrieveResults_" + ORG_ID + "_" + USER_ID + "_" + created_date + ".zip");
-//                    File unzipFile = new File(report_path + "retrieveResults_" + ORG_ID + "_" + USER_ID + "_" + created_date);
-//                    deleteDir(zipFile);
-//                    deleteDir(unzipFile);
-//                    logger.info(" Report deleted from the system");
-//                } catch (Exception e) {
-//                    logger.error(" Sorry unable to delete report" + e.getMessage());
-//                }
-//            }
         } catch (ConnectionException ce) {
             ce.printStackTrace();
         }
     }
 
-//    public boolean deleteDir(File dir) {
-//        if (dir.isDirectory()) {
-//            String[] children = dir.list();
-//            for (int i = 0; i < children.length; i++) {
-//                boolean success = deleteDir(new File(dir, children[i]));
-//                if (!success) {
-//                    return false;
-//                }
-//            }
-//        }
-//        System.out.println("The directory is deleted.");
-//        return dir.delete();
-//
-//    }
 }

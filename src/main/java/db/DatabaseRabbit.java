@@ -224,7 +224,7 @@ public class DatabaseRabbit {
       
       String email_id = (String) jsonObj.get("email_id");
      // String content_version_uploader = (String) jsonObj.get("content_version_uploader");
-     // String reportIdDb = (String) jsonObj.get("reportIdDb");
+      String reportIdDb = (String) jsonObj.get("reportIdDb");
          
       try {
 		 partnerConection = DataModel.createPartnerConection(token, instance_url, current_version);
@@ -232,7 +232,7 @@ public class DatabaseRabbit {
 		 
 		 
 		 MailUtil mailUtil = new MailUtil();
-		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness V2", "", "", email_id, null, org_id, user_id, null, created_date);
+		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness V2", "", "", email_id, reportIdDb, org_id, user_id, null, created_date);
       
       } catch (ConnectionException e) {
 		logger.error("* Could not create partner conection: "+ e.getMessage());

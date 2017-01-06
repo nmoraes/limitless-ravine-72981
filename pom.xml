@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>rabbitmq-worker</groupId>
     <version>1.0-SNAPSHOT</version>
-    <name>rabbitmq-worker</name>
-    <artifactId>rabbitmq</artifactId>
+    <name>readiness-email-scheduler</name>
+    <artifactId>readiness-email-scheduler</artifactId>
     <packaging>jar</packaging>
 
     <properties>

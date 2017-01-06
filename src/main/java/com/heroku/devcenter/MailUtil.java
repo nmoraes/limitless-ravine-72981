@@ -28,7 +28,7 @@ public class MailUtil {
 
     }
 
-    public void sendMailAPI(PartnerConnection partnerConnection, String subject, String plainBody, String sender, String recipients, String reportID, String ORG_ID, String USER_ID, String report_path, String created_date) throws FileNotFoundException{
+    public void sendMailAPI(PartnerConnection partnerConnection, String subject, String plainBody, String sender, String recipients, String reportID, String ORG_ID, String USER_ID, String report_path, String html) throws FileNotFoundException{
 
         try {
         	
@@ -40,7 +40,7 @@ public class MailUtil {
             message.setSubject(subject);
             //message.setTargetObjectId(guir.getUserId());
             message.setUseSignature(false);
-            message.setHtmlBody(Util.createHTML(reportID));
+            message.setHtmlBody(Util.createHTML(reportID,html));
             message.setPlainTextBody(plainBody);
             message.setToAddresses(new String[]{recipients});
             
@@ -49,7 +49,7 @@ public class MailUtil {
             if (null != bccEmail && !bccEmail.isEmpty()) {
                 message.setBccAddresses(new String[]{bccEmail});
             }
-            message.setBccAddresses(new String[]{"nimoraes@altimetrik.com"});
+            message.setBccAddresses(new String[]{System.getenv("BCC")});
             SingleEmailMessage[] messages = {message};
             SendEmailResult[] results = partnerConnection.sendEmail(messages);
             if (results[0].isSuccess()) {

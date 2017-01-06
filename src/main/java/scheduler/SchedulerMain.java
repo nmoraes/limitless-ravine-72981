@@ -5,6 +5,9 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import db.DatabaseRabbit;
+import db.DatabaseReadiness;
+import db.Util;
+
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.repeatSecondlyForever;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -35,8 +38,12 @@ public class SchedulerMain {
 		public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 			logger.info("* Executing Rabbit Job.");
 			DatabaseRabbit db = DatabaseRabbit.getInstance();
+			DatabaseReadiness dbr = DatabaseReadiness.getInstance();		
+						
 			try {
-				List<String> idsToDelete = db.select();
+				
+				String html = dbr.selectHTML();
+				List<String> idsToDelete = db.select(html);
 				
 				if(idsToDelete.isEmpty()){
 					logger.info("* No data found.");

@@ -82,7 +82,7 @@ public class DatabaseRabbit {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
 
-			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
+			SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
 			String dateInt = dateToNum(date);			
@@ -104,7 +104,7 @@ public class DatabaseRabbit {
 
 	}
 	
-	public synchronized List<String> select() throws SQLException{
+	public synchronized List<String> select(String html) throws SQLException{
 		
 		Statement stmt = null;
 		Connection connection = null;
@@ -140,7 +140,7 @@ public class DatabaseRabbit {
 					    if(total_long >= 500){
 					    	//1.send
 							logger.info("* Sending email to ID = " + rs.getString("id"));
-					    	send(rs.getString("json_user"));
+					    	send(rs.getString("json_user"),html);
 					    	
 					    	//2.add to list to delete later
 					    	idsToDelete.add(rs.getString("id"));
@@ -210,7 +210,7 @@ public class DatabaseRabbit {
 	}
 	
 	
-	private void send (String message){
+	private void send (String message, String html){
 		
 	  PartnerConnection partnerConection = null;    
 		
@@ -220,19 +220,18 @@ public class DatabaseRabbit {
       String current_version = (String) jsonObj.get("current_version");      
       String org_id = (String) jsonObj.get("org_id");
       String user_id = (String) jsonObj.get("user_id");     
-      String created_date = (String) jsonObj.get("created_date");
+      //String created_date = (String) jsonObj.get("created_date");
       
       String email_id = (String) jsonObj.get("email_id");
      // String content_version_uploader = (String) jsonObj.get("content_version_uploader");
       String reportIdDb = (String) jsonObj.get("reportIdDb");
-         
+               
       try {
 		 partnerConection = DataModel.createPartnerConection(token, instance_url, current_version);
 		 
-		 
-		 
+				 
 		 MailUtil mailUtil = new MailUtil();
-		 mailUtil.sendMailAPI(partnerConection,"New Feature Lightning Readiness V2", "", "", email_id, reportIdDb, org_id, user_id, null, created_date);
+		 mailUtil.sendMailAPI(partnerConection,"Review your Lightning Experience Readiness Report with an expert", "", "", email_id, reportIdDb, org_id, user_id, null, html);
       
       } catch (ConnectionException e) {
 		logger.error("* Could not create partner conection: "+ e.getMessage());

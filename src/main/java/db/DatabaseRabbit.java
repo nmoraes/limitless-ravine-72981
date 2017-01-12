@@ -85,6 +85,8 @@ public class DatabaseRabbit {
 			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
+			System.out.println("DATE :"+date);
+			
 			String dateInt = dateToNum(date);			
 			
 			String autoIdQuery = "INSERT INTO users (date, json_user) VALUES('" + dateInt+ "','" + message +"');";
@@ -118,7 +120,7 @@ public class DatabaseRabbit {
 			String autoIdQuery = "SELECT * FROM users;";
 
 			//system time
-			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd hh:mm:ss");
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 			String sysDate = dateToNum(date);								
 			BigInteger sysDateInt = new BigInteger(sysDate);
@@ -135,6 +137,11 @@ public class DatabaseRabbit {
 					    //system time - database time 
 						BigInteger total =sysDateInt.subtract(sysDateIntDB);
 						long total_long = total.longValue();
+						
+						System.out.println("database time: " + sysDateIntDB);
+						System.out.println("system time: " + sysDateInt);
+						System.out.println("system time - database time: " + total_long);
+						
 						
 						//Send message if condition true
 					    if(total_long >= 500){

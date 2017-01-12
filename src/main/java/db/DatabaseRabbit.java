@@ -82,7 +82,7 @@ public class DatabaseRabbit {
 			connection = DatabaseRabbit.getConnection();
 			stmt = connection.createStatement();
 
-			SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss");
+			SimpleDateFormat ft = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
 			String date = ft.format(Calendar.getInstance().getTime());
 
 			String dateInt = dateToNum(date);			

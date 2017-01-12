@@ -137,7 +137,7 @@ public class DatabaseRabbit {
 						long total_long = total.longValue();
 						
 						//Send message if condition true
-					    if(total_long >= 500){
+					    if(total_long >= 1000){
 					    	//1.send
 							logger.info("* Sending email to ID = " + rs.getString("id"));
 					    	send(rs.getString("json_user"),html);
